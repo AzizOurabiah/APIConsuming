@@ -1,6 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using NewZelandWalks.UI.Models;
 using NewZelandWalks.UI.Models.DTO;
 using System.Linq.Expressions;
+using System.Text;
+using System.Text.Json;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace NewZelandWalks.UI.Controllers
 {
@@ -42,6 +47,35 @@ namespace NewZelandWalks.UI.Controllers
         public IActionResult Add()
         {
             return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Add(AddRegionViewModel addRegionViewModel)
+        {
+            //We create a new client
+            var client = _httpContextFactory.CreateClient();
+
+            //We create httpRequest
+            var httpRequestMessage = new HttpRequestMessage()
+            {
+                Method = HttpMethod.Post,
+                RequestUri = new Uri("https://localhost:7096/api/regions"),
+                Content = new StringContent(JsonSerializer.Serialize(addRegionViewModel), Encoding.UTF8, "application/json")
+            };
+            //Send the request
+            var httpResponseMessage = await client.SendAsync(httpRequestMessage);
+
+            //Sassuer que la réponse est réussi
+            httpResponseMessage.EnsureSuccessStatusCode();
+
+            //And after that we can read the body the same way as we did before.
+            var response =  await httpResponseMessage.Content.ReadFromJsonAsync<RegionDto>();
+
+            if(response is not null)
+            {
+                return RedirectToAction("Index", "Regions");
+            }
+            return BadRequest(response);
+            //return View();
         }
     }
 }
