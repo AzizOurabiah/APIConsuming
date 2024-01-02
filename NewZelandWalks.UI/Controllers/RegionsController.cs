@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NewZelandWalks.UI.Models.DTO;
+using System.Linq.Expressions;
 
 namespace NewZelandWalks.UI.Controllers
 {
@@ -12,6 +14,7 @@ namespace NewZelandWalks.UI.Controllers
         }
         public async Task<IActionResult> Index()
         {
+            List<RegionDto> response = new List<RegionDto>();
             try
             {
                 //On crée a new HttpClient
@@ -23,15 +26,15 @@ namespace NewZelandWalks.UI.Controllers
                 httpResponseMessage.EnsureSuccessStatusCode();
 
                 //read the response
-                var stringResponseBody = await httpResponseMessage.Content.ReadAsStringAsync();
+                response.AddRange(await httpResponseMessage.Content.ReadFromJsonAsync<IEnumerable<RegionDto>>());
 
-                ViewBag.Response = stringResponseBody;
+                //ViewBag.Response = stringResponseBody;
             }
             catch (Exception ex)
             {
                 //Log the exception 
             }
-            return View();
+            return View(response);
         }
     }
 }
