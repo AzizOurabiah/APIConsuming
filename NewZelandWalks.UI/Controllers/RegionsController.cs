@@ -12,6 +12,7 @@ namespace NewZelandWalks.UI.Controllers
         {
             _httpContextFactory = httpContextFactory;
         }
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             List<RegionDto> response = new List<RegionDto>();
@@ -35,6 +36,12 @@ namespace NewZelandWalks.UI.Controllers
                 //Log the exception 
             }
             return View(response);
+        }
+
+        [HttpGet]
+        public IActionResult Add()
+        {
+            return View();
         }
     }
 }
