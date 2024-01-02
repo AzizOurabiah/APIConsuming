@@ -13,6 +13,7 @@
                 <th>Id</th>
                 <th>Code</th>
                 <th>Name</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -22,6 +23,11 @@
                 <td>@walk.Id</td>
                 <td>@walk.Code</td>
                 <td>@walk.Name</td>
+                <td>
+                    <a class="btn btn-warning" asp-controller="Regions" asp-action="Update" asp-route-id="@walk.Id">Modife</a>
+                    @* <a class="btn btn-warning" asp-controller="Regions" asp-action="Update(@walk.Id)">Update region</a> *@
+                    <button class="btn btn-danger">Supprimer</button>
+                </td>
             </tr>
         }
         </tbody>

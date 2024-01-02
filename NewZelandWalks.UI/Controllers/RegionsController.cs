@@ -77,5 +77,35 @@ namespace NewZelandWalks.UI.Controllers
             return BadRequest(response);
             //return View();
         }
+
+        [HttpGet("Guid:id")]
+        public async Task<IActionResult> Update(Guid id)
+        {
+            //On crée un nouveau client
+            var client = _httpContextFactory.CreateClient();
+
+            //Création de la requete
+            var httpRequestMessage = new HttpRequestMessage()
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri($"https://localhost:7096/api/regions/{id}"),
+                Content = new StringContent(JsonSerializer.Serialize(id), Encoding.UTF8, "application/json")
+            };
+
+            //Send the request and put the response into a variable
+            var httpResponseMessage = await client.SendAsync(httpRequestMessage);
+
+            //S'assurer que la réponse est réussi
+            httpResponseMessage.EnsureSuccessStatusCode();
+
+            //Lire la reponse 
+            var response = await httpResponseMessage.Content.ReadFromJsonAsync<UpdateViewRegionModel>();
+
+            if(response is not null )
+            {
+                return View(response);
+            }
+            return View();
+        }
     }
 }
