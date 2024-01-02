@@ -9,6 +9,9 @@ namespace NewZelandWalks.UI
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            //On a injecté le service HttpClient
+            builder.Services.AddHttpClient();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
